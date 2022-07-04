@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="module" src="libs/swiped-events/swiped-events.min.js"></script>
+    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
+    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css"
+          media="all">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+  body {
+    --primary-color: 220, 0, 220;
+    --secondary-color: 120, 120, 120;
+    --text-color: 40, 40, 40;
+
+    font-family: 'Roboto Mono', monospace;
+  }
+</style>
+<script type="module">
+  import "./elements/x-button.js"
+  import "./elements/x-icon.js"
+  import "./elements/x-input.js"
+  import "./elements/x-checkbox.js"
+  import "./elements/x-loader.js"
+  import "./elements/x-options.js"
+  import "./elements/x-switch.js"
+  import "./elements/x-slider.js"
+  import {openModal} from "./elements/x-modal.js"
+
+  import {YoffeeElement, createYoffeeElement, html} from "./libs/yoffee/yoffee.min.js"
+
+  createYoffeeElement("some-element", () => {
+    let state = {
+      checkboxed: false,
+      switched: false,
+      slider: 0
+    }
+    return html(state)`
+    <style>
+        :host {
+            color: rgb(var(--text-color));
+        }
+
+        div > * {
+            margin-bottom: 10px;
+        }
+
+        x-button {
+            background-color: rgb(var(--primary-color));
+        }
+
+        x-switch {
+            --switch-on-background-color: rgb(var(--primary-color));
+        }
+
+
+    </style>
+    <div>
+        <x-icon icon="fa-garbage"></x-icon>
+        <x-input placeholder="enter some stuff plz"></x-input>
+        <x-checkbox value="${() => state.checkboxed}"
+                    selected=${() => () => state.checkboxed = !state.checkboxed}></x-checkbox>
+        <x-switch value=${() => state.switched}
+                  switched=${() => () => state.switched = !state.switched}></x-switch>
+        <x-slider updated=${() => newValue => state.slider = newValue}></x-slider>
+        <div style='color: ${() => state.switched ? "fuchsia" : "inherit"}; opacity: ${() => state.slider}'>
+            ${() => state.slider}
+        </div>
+        <x-button onclick=${() => {
+            openModal(
+                html()`
+                I am modal content
+                `,
+                () => console.log("Modal closed")
+            )
+        }}>i am button, i open modal</x-button>
+
+        <x-loader loading></x-loader>
+    </div>
+    `
+  })
+</script>
+<some-element></some-element>
+</body>
+</html>
